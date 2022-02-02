@@ -2,7 +2,7 @@ import axelrod as axl
 import os
 import utils
 
-from players import players
+from players import players, edges
 
 turns = 200
 repetitions = 100
@@ -19,7 +19,7 @@ def main(players=players):
         pass
 
     tournament = axl.Tournament(players, turns=turns, repetitions=repetitions,
-                                noise=noise, seed=seed)
+                                noise=noise, seed=seed, edges=edges)
 
     results = tournament.play(filename=filename, processes=processes)
     utils.obtain_assets(results, "strategies", "noisy")

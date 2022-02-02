@@ -1,5 +1,6 @@
 """Strategies to be included in the tournament"""
 import axelrod as axl
+import itertools
 
 # Include a list of parametrized strategies
 parameterized_players = [
@@ -17,6 +18,34 @@ parameterized_players = [
         axl.DoubleCrosser, axl.Gradual
     ]),
 ]
+testing_players = [axl.CURE(Delta) for Delta in range(5)] 
 
-players = [s() for s in axl.strategies] + parameterized_players
+gammas = [0.1, 0.2]
+
+thresholds = [(0, 0),
+              (2, 2),
+              (3, 3),
+              (2, 1), 
+              (3, 1), 
+              (1, 2), 
+              (1, 3),
+              (1, 4)]
+
+for gamma in gammas:
+    for threshold in thresholds:
+        testing_players.append(axl.TEEC(Tthreshold=threshold[1],
+                                              Ethreshold=threshold[0],
+                                              ExploiRate=gamma))
+
+players = [s() for s in axl.strategies] + parameterized_players + testing_players
 players.sort(key=lambda p:p.__repr__())
+
+num_players = len(players)
+num_testing = len(testing_players)
+
+source = range(num_players - num_testing)
+sink = range(num_players - num_testing, num_players)
+edges = list(itertools.product(sink, source))
+
+
+print(len(players))
